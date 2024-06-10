@@ -1,0 +1,10 @@
+.searchBox {
+    display: flex;
+    flex-direction: column;
+    width: 318px;
+    padding: 0;
+    margin-bottom: 32px;
+}
+.label {
+    margin-bottom: 6px;
+}
