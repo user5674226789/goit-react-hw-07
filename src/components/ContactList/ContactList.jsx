@@ -1,37 +1,30 @@
-/* eslint-disable react/prop-types */
-import css from './ContactList.module.css'
-import Contact from '../Contact/Contact'
-import { useSelector } from "react-redux"
-import { selectContacts, selectNameFilter } from "../../redux/selectors"
+import { useSelector } from "react-redux";
+import Contact from "../Contact/Contact";
+import css from "./ContactList.module.css";
+import { selectError, selectIsLoading } from "../../redux/selectors";
+import { filteredContacts } from "../../redux/contactsOps";
 
+const ContactList = () => {
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
+  const contacts = useSelector(filteredContacts);
 
-export default function ContactList () {
-    const contacts = useSelector(selectContacts);
-    const filters = useSelector(selectNameFilter);
-    const visibleContacts = contacts.filter((contact) => {
-      if ("id" in contact && "name" in contact && "phone" in contact) {
-        if (
-          typeof contact.id === "string" &&
-          typeof contact.name === "string" &&
-          typeof contact.phone === "string"
-        ) {
-          return contact.name.toLowerCase().includes(filters.toLowerCase());
-        }
-      }
-      return false;
-    });
+  return (
+    <ul className={css.contactList}>
+      {isLoading && !error && <b>Request in progress...</b>}
+      {contacts.map((contact) => {
+        return (
+          <li key={contact.id} className={css.contactItem}>
+            <Contact
+              name={contact.name}
+              number={contact.number}
+              id={contact.id}
+            />
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
 
-    return (
-        <>
-            <ul className={css.list}>
-                {visibleContacts.map((contact) => {
-                    return (
-                        <li key={contact.id} className={css.contactItem}>
-                            <Contact id={contact.id} name={contact.name} phone={contact.phone}/>
-                        </li>
-                    )
-                })}
-            </ul>
-        </>
-    )
-}
+export default ContactList;

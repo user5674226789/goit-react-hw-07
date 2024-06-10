@@ -1,25 +1,28 @@
-/* eslint-disable react/prop-types */
-import css from './SearchBox.module.css';
 import { useDispatch, useSelector } from "react-redux";
-import { selectNameFilter } from "../../redux/selectors";
-import { setStatusFilter } from "../../redux/filtersSlice";
 
+import css from "./SearchBox.module.css";
+import { selectFilter } from "../../redux/selectors";
+import { changeFilter } from "../../redux/filtersSlice";
 
-export default function SearchBox () {
-    const dispatch = useDispatch();
-    const filter = useSelector(selectNameFilter);
+const SearchBox = () => {
+  const filter = useSelector(selectFilter);
+  const dispatch = useDispatch();
+  const handleChangeInput = (e) => {
+    dispatch(changeFilter(e.target.value));
+  };
 
-    const handleFilter = (e) => {
-        const name = e.target.value.trim();
-        dispatch(setStatusFilter(name));
-    };
+  return (
+    <div className={css.searchBoxContainer}>
+      <h3>Find contacts by name</h3>
+      <input
+        type="text"
+        value={filter.name}
+        onChange={handleChangeInput}
+        className={css.searchBoxInput}
+        placeholder="Search..."
+      />
+    </div>
+  );
+};
 
-    return (
-        <div className={css.searchBox}>
-            <label htmlFor="searchBox" className={css.label}>Find contacts by name</label>
-            <input value={filter} onChange={handleFilter} type='text' id='searchBox' className={css.searchInput}></input>
-           
-        </div>
-
-    )
-}
+export default SearchBox;
